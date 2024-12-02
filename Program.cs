@@ -1,93 +1,113 @@
-﻿// Интерфейс генератора случайных чисел
-public interface IRandomNumberGenerator
-{
-    int Generate(int min, int max);
-}
+﻿
+using System;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
-// Реализация генератора случайных чисел
-public class RandomNumberGenerator : IRandomNumberGenerator
+namespace OTUS_SOLID2
 {
-    private readonly Random _random = new Random();
-
-    public int Generate(int min, int max)
+    internal class Program
     {
-        return _random.Next(min, max);
-    }
-}
-
-// Интерфейс чтения и записи настроек
-public interface ISettingsProvider
-{
-    int MinValue { get; }
-    int MaxValue { get; }
-    int MaxAttempts { get; }
-}
-
-// Реализация чтения и записи настроек
-public class SettingsProvider : ISettingsProvider
-{
-    public int MinValue { get; } = 1;
-    public int MaxValue { get; } = 100;
-    public int MaxAttempts { get; } = 10;
-}
-
-// Класс, содержащий логику игры
-public class GuessingGame
-{
-    private readonly IRandomNumberGenerator _randomNumberGenerator;
-    private readonly ISettingsProvider _settingsProvider;
-    private readonly int _targetNumber;
-    private int _attempts;
-
-    public GuessingGame(IRandomNumberGenerator randomNumberGenerator, ISettingsProvider settingsProvider)
-    {
-        _randomNumberGenerator = randomNumberGenerator;
-        _settingsProvider = settingsProvider;
-        _targetNumber = _randomNumberGenerator.Generate(_settingsProvider.MinValue, _settingsProvider.MaxValue);
-        _attempts = 0;
-    }
-
-    public string MakeGuess(int guess)
-    {
-        _attempts++;
-        if (guess < _targetNumber)
+        static void Main(string[] args)
         {
-            return "Больше";
-        }
-        if (guess > _targetNumber)
-        {
-            return "Меньше";
-        }
-        return "Правильно";
-    }
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
 
-    public bool CanAttempt => _attempts < _settingsProvider.MaxAttempts;
-}
 
-// Главный класс программы
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        IRandomNumberGenerator randomNumberGenerator = new RandomNumberGenerator();
-        ISettingsProvider settingsProvider = new SettingsProvider();
-        var game = new GuessingGame(randomNumberGenerator, settingsProvider);
+            int minValue = int.Parse(configuration["GameSettings:MinValue"]);   
+            int maxValue = int.Parse(configuration["GameSettings:MaxValue"]); 
+            int maxAttempts = int.Parse(configuration["GameSettings:MaxAttempts"]);
 
-        Console.WriteLine("Угадайте число:");
-        while (game.CanAttempt)
-        {
-            int guess = int.Parse(Console.ReadLine());
-            string result = game.MakeGuess(guess);
-            Console.WriteLine(result);
-            if (result == "Правильно")
+            ISettingsProvider settingsProvider = new SettingsProvider(minValue, maxValue, maxAttempts);
+
+            IRandomNumberGenerator randomNumberGenerator;
+
+            Console.WriteLine("Выберите тип генератора: 1 - Четные числа, 2 - Нечетные числа");
+
+            int choice = -1;
+
+            while (!int.TryParse(Console.ReadLine(),out choice))
             {
-                break;
+                Console.WriteLine("Выберите тип генератора: 1 - Четные числа, 2 - Нечетные числа");
+            }
+
+            if (choice == 1)
+            {
+                randomNumberGenerator = new EvenRandomNumberGenerator();
+                Console.WriteLine("Угадайте четное число:");
+            }
+            else
+            {
+                randomNumberGenerator = new OddRandomNumberGenerator();
+                Console.WriteLine("Угадайте нечетное число:");
+            }
+
+            var game = new GuessingGame(randomNumberGenerator, settingsProvider);
+
+            while (game.CanAttempt)
+            {
+                int guess = int.Parse(Console.ReadLine());
+                string result = game.MakeGuess(guess);
+                Console.WriteLine(result);
+                if (result == "Правильно")
+                {
+                    break;
+                }
+            }
+
+            if (!game.CanAttempt)
+            {
+                Console.WriteLine("Вы исчерпали все попытки.");
             }
         }
-
-        if (!game.CanAttempt)
-        {
-            Console.WriteLine("Вы исчерпали все попытки.");
-        }
     }
 }
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        var configuration = new ConfigurationBuilder()
+//            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+//            .Build();
+
+//        int minValue = configuration.GetValue<int>("GameSettings:MinValue");
+//        int maxValue = configuration.GetValue<int>("GameSettings:MaxValue");
+//        int maxAttempts = configuration.GetValue<int>("GameSettings:MaxAttempts");
+
+//        ISettingsProvider settingsProvider = new SettingsProvider(minValue, maxValue, maxAttempts);
+
+//        IRandomNumberGenerator randomNumberGenerator;
+//        Console.WriteLine("Выберите тип генератора: 1 - Четные числа, 2 - Нечетные числа");
+//        int choice = int.Parse(Console.ReadLine());
+//        if (choice == 1)
+//        {
+//            randomNumberGenerator = new EvenRandomNumberGenerator();
+//            Console.WriteLine("Угадайте четное число:");
+//        }
+//        else
+//        {
+//            randomNumberGenerator = new OddRandomNumberGenerator();
+//            Console.WriteLine("Угадайте нечетное число:");
+//        }
+
+//        var game = new GuessingGame(randomNumberGenerator, settingsProvider);
+
+//        while (game.CanAttempt)
+//        {
+//            int guess = int.Parse(Console.ReadLine());
+//            string result = game.MakeGuess(guess);
+//            Console.WriteLine(result);
+//            if (result == "Правильно")
+//            {
+//                break;
+//            }
+//        }
+
+//        if (!game.CanAttempt)
+//        {
+//            Console.WriteLine("Вы исчерпали все попытки.");
+//        }
+//    }
+//}
+

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOLID", "SOLID.csproj", "{6AB22074-0E2D-4869-956D-574E0F93D612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS_SOLID2", "OTUS_SOLID2.csproj", "{D414A1EF-445E-4216-8059-336697570061}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6AB22074-0E2D-4869-956D-574E0F93D612}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AB22074-0E2D-4869-956D-574E0F93D612}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AB22074-0E2D-4869-956D-574E0F93D612}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AB22074-0E2D-4869-956D-574E0F93D612}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D414A1EF-445E-4216-8059-336697570061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D414A1EF-445E-4216-8059-336697570061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D414A1EF-445E-4216-8059-336697570061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D414A1EF-445E-4216-8059-336697570061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {28733005-E240-48E2-A07E-F9A0E72CA845}
+		SolutionGuid = {B18F8C67-DE97-429C-834E-D6F9A3931937}
 	EndGlobalSection
 EndGlobal
